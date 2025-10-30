@@ -1,0 +1,67 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.prod.env
+
+# Logs
+logs/
+*.log
+*.log.*
+debug.log
+error.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage and test reports
+coverage/
+.nyc_output/
+jest-test-results.json
+
+# Build output
+dist/
+build/
+tmp/
+temp/
+
+# TypeScript (if applicable)
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.swp
+*.bak
+*.tmp
+*.orig
+
+# Postman
+postman/
+
+# pg-migrate
+migrations/
