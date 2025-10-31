@@ -1,4 +1,4 @@
-const _autoBind = require("auto-bind");
+const _autoBind = require('auto-bind');
 const autoBind = _autoBind.default ?? _autoBind;
 
 class UsersHandler {
@@ -15,25 +15,25 @@ class UsersHandler {
     const userId = await this._service.addUser({ username, password, fullname });
 
     const response = h.response({
-        status: 'success',
-        message: 'User berhasil ditambahkan',
-        data: {
-            userId,
-        },
+      status: 'success',
+      message: 'User berhasil ditambahkan',
+      data: {
+        userId,
+      },
     });
     response.code(201);
     return response;
   }
 
-  async getUserByIdHandler(request, h) {
+  async getUserByIdHandler(request) {
     const { id } = request.params;
     const user = await this._service.getUserById(id);
 
     return {
-        status: 'success',
-        data: {
-            user,
-        },
+      status: 'success',
+      data: {
+        user,
+      },
     };
   }
 }
