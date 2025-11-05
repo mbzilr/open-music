@@ -12,7 +12,7 @@ const routes = (handler) => [
     path: '/albums/{id}',
     handler: handler.getAlbumByIdHandler,
     options: {
-      auth: 'openmusicapp_jwt',
+      auth: false,
     },
   },
   {

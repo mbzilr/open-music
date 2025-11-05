@@ -8,7 +8,7 @@ class AuthenticationService {
 
   async addRefreshToken(token) {
     const query = {
-      text: 'INSERT INTO authentications VALUES($!)',
+      text: 'INSERT INTO authentications (token) VALUES($1)',
       values: [token],
     };
 

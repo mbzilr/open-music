@@ -64,7 +64,7 @@ class UsersService {
       values: [username],
     };
 
-    const result = this._pool.query(query);
+    const result = await this._pool.query(query);
 
     if (!result.rows.length) {
       throw new AuthenticationError('Kredensial yang Anda berikan salah');

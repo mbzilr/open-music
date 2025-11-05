@@ -42,15 +42,12 @@ const init = async () => {
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
 
-  // registrasi plugin eksternal
-
   await server.register([
     {
       plugin: Jwt,
     }
-  ])
+  ]);
 
-  // Mendefinisikan strategi autentikasi jwt
   server.auth.strategy('openmusicapp_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
@@ -65,7 +62,9 @@ const init = async () => {
         id: artifacts.decoded.payload.id,
       }
     })
-  })
+  });
+
+  server.auth.default('openmusicapp_jwt');
 
   await server.register([
     {
@@ -116,8 +115,14 @@ const init = async () => {
       return newResponse;
     }
 
-    if (!response.isServer) {
-      return h.continue;
+    if (response.isBoom) {
+      const { statusCode } = response.output;
+      const newResponse = h.response({
+        status: 'fail',
+        message: response.message,
+      });
+      newResponse.code(statusCode);
+      return newResponse;
     }
 
     const newResponse = h.response({
