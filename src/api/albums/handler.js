@@ -1,6 +1,5 @@
 const _autoBind = require('auto-bind');
 const autoBind = _autoBind.default ?? _autoBind;
-const AuthenticationError = require('../../exceptions/AuthenticationError');
 
 class AlbumsHandler {
   constructor(service, validator) {
