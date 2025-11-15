@@ -4,7 +4,7 @@ const routes = (handler) => [
     path: '/albums',
     handler: handler.postAlbumHandler,
     options: {
-      auth: 'openmusicapp_jwt',
+      auth: false,
     },
   },
   {
@@ -20,7 +20,7 @@ const routes = (handler) => [
     path: '/albums/{id}',
     handler: handler.putAlbumByIdHandler,
     options: {
-      auth: 'openmusicapp_jwt',
+      auth: false,
     },
   },
   {
@@ -28,7 +28,7 @@ const routes = (handler) => [
     path: '/albums/{id}',
     handler: handler.deleteAlbumByIdHandler,
     options: {
-      auth: 'openmusicapp_jwt',
+      auth: false,
     },
   },
 ];

@@ -82,8 +82,6 @@ const init = async () => {
     })
   });
 
-  server.auth.default('openmusicapp_jwt');
-
   await server.register([
     {
       plugin: users,
