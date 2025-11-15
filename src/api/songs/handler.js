@@ -11,7 +11,7 @@ class SongsHandler {
 
   async postSongHandler(request, h) {
     this._validator.validateSongPayload(request.payload);
-    
+
     if (!request.auth.isAuthenticated) {
       throw new AuthenticationError('Missing authentication');
     }

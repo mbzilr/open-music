@@ -5,7 +5,6 @@ const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthenticationError = require('../../exceptions/AuthenticationError');
 
-
 class UsersService {
   constructor() {
     this._pool = new Pool();
@@ -79,6 +78,19 @@ class UsersService {
     }
 
     return id;
+  }
+
+  async verifyUserExists(userId) {
+    const query = {
+      text: 'SELECT id FROM users WHERE id = $1',
+      values: [userId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('User tidak ditemukan');
+    }
   }
 }
 

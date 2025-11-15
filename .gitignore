@@ -8,6 +8,10 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# TODO File
+
+.todo
+
 # Environment files
 .env
 .env.local
@@ -63,5 +67,3 @@ Thumbs.db
 # Postman
 postman/
 
-# pg-migrate
-migrations/

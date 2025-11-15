@@ -11,11 +11,11 @@ class AlbumsHandler {
 
   async postAlbumHandler(request, h) {
     this._validator.validateAlbumPayload(request.payload);
-    
+
     if (!request.auth.isAuthenticated) {
       throw new AuthenticationError('Missing authentication');
     }
-    
+
     const { name, year, genre, performer } = request.payload;
 
     const albumId = await this._service.addAlbum({
@@ -45,11 +45,11 @@ class AlbumsHandler {
 
   async putAlbumByIdHandler(request, h) {
     this._validator.validateAlbumPayload(request.payload);
-    
+
     if (!request.auth.isAuthenticated) {
       throw new AuthenticationError('Missing authentication');
     }
-    
+
     const { id } = request.params;
     const { name, year, genre, performer } = request.payload;
 
@@ -67,7 +67,7 @@ class AlbumsHandler {
     if (!request.auth.isAuthenticated) {
       throw new AuthenticationError('Missing authentication');
     }
-    
+
     const { id } = request.params;
     await this._service.deleteAlbumById(id);
 
