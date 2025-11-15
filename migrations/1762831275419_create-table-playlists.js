@@ -8,36 +8,36 @@
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
-  pgm.createTable("playlists", {
+  pgm.createTable('playlists', {
     id: {
-      type: "VARCHAR(50)",
+      type: 'VARCHAR(50)',
       primaryKey: true,
       notNull: true,
     },
     name: {
-      type: "TEXT",
+      type: 'TEXT',
       notNull: true,
     },
     owner: {
-      type: "VARCHAR(50)",
+      type: 'VARCHAR(50)',
       notNull: true,
     },
     created_at: {
-      type: "TEXT",
+      type: 'TEXT',
       notNull: true,
     },
     updated_at: {
-      type: "TEXT",
+      type: 'TEXT',
       notNull: true,
     },
   });
 
-  pgm.addConstraint("playlists", "fk_playlist_owner_id", {
+  pgm.addConstraint('playlists', 'fk_playlist_owner_id', {
     foreignKeys: {
-      columns: "owner",
-      references: "users(id)",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      columns: 'owner',
+      references: 'users(id)',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   });
 };
@@ -48,6 +48,6 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
-  pgm.dropConstraint("playlists", "fk_playlist_owner_id");
-  pgm.dropTable("playlists");
+  pgm.dropConstraint('playlists', 'fk_playlist_owner_id');
+  pgm.dropTable('playlists');
 };

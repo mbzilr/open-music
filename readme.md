@@ -1,4 +1,5 @@
 # Open Music
 
-A backend project where anyone can share music.
-Current version: 2.0.0
+A backend project where anyone can share music. Cool stuff.  
+
+Current version: 3.0.0

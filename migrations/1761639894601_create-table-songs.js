@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 /**
  * @type {import('node-pg-migrate').MigrationBuilder}
  */
