@@ -1,6 +1,5 @@
 const _autoBind = require('auto-bind');
 const autoBind = _autoBind.default ?? _autoBind;
-const AuthenticationError = require('../../exceptions/AuthenticationError');
 
 class SongsHandler {
   constructor(service, validator) {
@@ -11,10 +10,6 @@ class SongsHandler {
 
   async postSongHandler(request, h) {
     this._validator.validateSongPayload(request.payload);
-
-    if (!request.auth.isAuthenticated) {
-      throw new AuthenticationError('Missing authentication');
-    }
 
     const { title = 'untitled', year, performer, genre, duration, albumId } = request.payload;
     const songId = await this._service.addSong({ title, year, performer, genre, duration, albumId });
