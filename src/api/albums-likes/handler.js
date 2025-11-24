@@ -47,6 +47,7 @@ class AlbumsLikesHandler {
       },
     });
     response.header('X-Data-Source', source === 'cache' ? 'cache' : 'db');
+    response.code(200)
     return response;
   }
 }

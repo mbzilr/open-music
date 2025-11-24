@@ -11,6 +11,7 @@ pnpm-lock.yaml
 # TODO File
 
 .todo
+.todo.md
 
 # Environment files
 .env
