@@ -1,6 +1,6 @@
 {
   "name": "openmusic_mbr",
-  "version": "3.0.0b",
+  "version": "3.0.0c",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,12 +9,14 @@
     "lint": "eslint . --fix",
     "migrate": "node-pg-migrate",
     "consumer-mqserver": "node src/services/rabbitmq/Consumer.js",
-    "consumer-mqserver:dev" : "nodemon src/services/rabbitmq/Consumer.js"
+    "consumer-mqserver:dev": "nodemon src/services/rabbitmq/Consumer.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.939.0",
+    "@aws-sdk/s3-request-presigner": "^3.939.0",
     "@hapi/hapi": "^21.4.3",
     "@hapi/jwt": "^3.2.1",
     "amqplib": "^0.10.9",

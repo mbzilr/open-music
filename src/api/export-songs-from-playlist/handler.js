@@ -1,4 +1,4 @@
-const _autoBind = require("auto-bind");
+const _autoBind = require('auto-bind');
 const autoBind = _autoBind.default ?? _autoBind;
 
 class ExportsHandler {
@@ -20,22 +20,22 @@ class ExportsHandler {
     await this._exportsService.verifyPlaylistAccess(playlistId, credentialId);
 
     const message = {
-        playlistId,
-        targetEmail,
+      playlistId,
+      targetEmail,
     };
 
     await this._producerService.sendMessage(
-        'export:songs',
-        JSON.stringify(message),
+      'export:songs',
+      JSON.stringify(message),
     );
 
     const response = h.response({
-        status: 'success',
-        message: 'Permintaan Anda sedang kami proses',
+      status: 'success',
+      message: 'Permintaan Anda sedang kami proses',
     });
     response.code(201);
     return response;
   }
 }
 
-exports.module = ExportsHandler;
+module.exports = ExportsHandler;

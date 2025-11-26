@@ -11,7 +11,7 @@ const SongValidator = require('./validator/music/songs');
 // Albums
 const albums = require('./api/albums');
 const AlbumsService = require('./services/postgres/AlbumsService');
-const AlbumValidator = require('./validator/music/albums');
+const { AlbumsTextValidator, AlbumsCoverValidator } = require('./validator/music/albums');
 
 // Albums Likes
 const albumsLikes = require('./api/albums-likes');
@@ -22,6 +22,12 @@ const AlbumLikesValidator = require('./validator/music/albumsLikes');
 const playlists = require('./api/playlists');
 const PlaylistsService = require('./services/postgres/PlaylistsService');
 const PlaylistValidator = require('./validator/music/playlists');
+
+// Export Songs
+const exportedSongs = require('./api/export-songs-from-playlist');
+const ExportsService = require('./services/rabbitmq/ExportsService');
+const ProducerService = require('./services/rabbitmq/ProducerService');
+const ExportSongsValidator = require('./validator/music/exportSongsFromPlaylist');
 
 // Users
 const users = require('./api/users');
@@ -44,12 +50,23 @@ const AuthenticationsService = require('./services/postgres/AuthenticationServic
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
+// Storage
+
+const S3StorageService = require('./services/S3/S3StorageService');
+
+// Cache
+const CacheService = require('./services/redis/CacheService');
+
+// Config
+const config = require('./utils/config.js');
+
+// Client Error
 const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
   const server = Hapi.server({
-    port: process.env.PORT || 3000,
-    host: process.env.HOST,
+    host: config.server.host,
+    port: config.server.port || 3000,
     routes: {
       cors: {
         origin: ['*'],
@@ -59,11 +76,16 @@ const init = async () => {
 
   const songsService = new SongsService();
   const albumsService = new AlbumsService();
-  const albumsLikesService = new AlbumsLikesService();
+  const cacheService = new CacheService();
+  await cacheService.connect();
+  const s3StorageService = new S3StorageService();
+  const albumsLikesService = new AlbumsLikesService(albumsService, cacheService);
   const playlistSongActivitiesService = new PlaylistSongActivitiesService();
   const usersService = new UsersService();
   const collaborationsService = new CollaborationsService();
   const playlistsService = new PlaylistsService(collaborationsService, playlistSongActivitiesService);
+  const exportsService = new ExportsService(playlistsService, collaborationsService);
+  const producerService = new ProducerService();
   const authenticationsService = new AuthenticationsService();
 
   await server.register([
@@ -116,7 +138,9 @@ const init = async () => {
       plugin: albums,
       options: {
         service: albumsService,
-        validator: AlbumValidator,
+        storageService: s3StorageService,
+        textValidator: AlbumsTextValidator,
+        imageValidator: AlbumsCoverValidator,
       },
     },
     {
@@ -144,9 +168,18 @@ const init = async () => {
       },
     },
     {
+      plugin: exportedSongs,
+      options: {
+        exportsService,
+        producerService,
+        validator: ExportSongsValidator,
+      }
+    },
+    {
       plugin: albumsLikes,
       options: {
         albumsLikesService,
+        albumsService,
         validator: AlbumLikesValidator,
       }
     },
@@ -188,6 +221,7 @@ const init = async () => {
 
   await server.start();
   console.log(`Server berjalan pada ${server.info.uri}`);
+
 };
 
 init();

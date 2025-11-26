@@ -1,7 +1,7 @@
 const InvariantError = require('../../../exceptions/InvariantError');
 const { AlbumPayloadSchema } = require('./schema');
 
-const AlbumsValidator = {
+const AlbumsTextValidator = {
   validateAlbumPayload: (payload) => {
     const validationResult = AlbumPayloadSchema.validate(payload);
 
@@ -11,4 +11,15 @@ const AlbumsValidator = {
   },
 };
 
-module.exports = AlbumsValidator;
+const AlbumsCoverValidator = {
+  validate(headers) {
+    const allowed = ['image/jpeg', 'image/png'];
+
+    if (!allowed.includes(headers['content-type'])) {
+      throw new InvariantError('Format file sampul album tidak valid');
+    }
+  }
+};
+
+
+module.exports = { AlbumsTextValidator, AlbumsCoverValidator };

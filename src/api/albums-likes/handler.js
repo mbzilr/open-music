@@ -2,8 +2,10 @@ const _autoBind = require('auto-bind');
 const autoBind = _autoBind.default ?? _autoBind;
 
 class AlbumsLikesHandler {
-  constructor({ albumsLikesService, validator }) {
-    (this._service = albumsLikesService), (this._validator = validator);
+  constructor({ albumsLikesService, albumsService, validator }) {
+    (this._service = albumsLikesService),
+    (this._albumsService = albumsService),
+    (this._validator = validator);
 
     autoBind(this);
   }
@@ -47,7 +49,7 @@ class AlbumsLikesHandler {
       },
     });
     response.header('X-Data-Source', source === 'cache' ? 'cache' : 'db');
-    response.code(200)
+    response.code(200);
     return response;
   }
 }

@@ -1,10 +1,10 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
-const AlreadyExistsError = require('../../exceptions/AlreadyExistsError');
+const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class AlbumsLikesService {
-  constructor({ albumsService, cacheService }) {
+  constructor(albumsService, cacheService) {
     this._pool = new Pool();
     this._albumsService = albumsService;
     this._cacheService = cacheService;
@@ -58,7 +58,7 @@ class AlbumsLikesService {
 
     const exists = await this.exists({ userId, albumId });
     if (exists) {
-      throw new AlreadyExistsError('Like sudah ada');
+      throw new InvariantError('Like sudah ada');
     }
 
     await this.addLike({ userId, albumId });

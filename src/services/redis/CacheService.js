@@ -1,10 +1,12 @@
 const redis = require('redis');
+const config = require('../../utils/config.js');
 
 class CacheService {
   constructor() {
     this._client = redis.createClient({
       socket: {
-        host: process.env.REDIS_SERVER,
+        host: config.redis.host || '127.0.0.1',
+        port: config.redis.port || 6379
       },
     });
 
@@ -15,6 +17,12 @@ class CacheService {
     this._client.connect();
   }
 
+  async connect() {
+    if (!this._client.isOpen) {
+      await this._client.connect();
+    }
+  }
+
   async set(key, value, expirationInSecond = 1800) {
     await this._client.set(key, value, {
       EX: expirationInSecond,
@@ -22,12 +30,9 @@ class CacheService {
   }
 
   async get(key) {
-    const result = await this._client.get(key);
-
-    if (result === null) throw new Error('Cache not found');
-
-    return result;
+    return await this._client.get(key);
   }
+
 
   async delete(key) {
     return this._client.del(key);

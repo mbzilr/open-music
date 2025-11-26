@@ -2,14 +2,17 @@ const _autoBind = require('auto-bind');
 const autoBind = _autoBind.default ?? _autoBind;
 
 class AlbumsHandler {
-  constructor(service, validator) {
-    (this._service = service), (this._validator = validator);
+  constructor(service, storageService, textValidator, imageValidator) {
+    (this._service = service),
+    (this._storageService = storageService),
+    (this._albumTextValidator = textValidator),
+    (this._albumCoverValidator = imageValidator),
 
     autoBind(this);
   }
 
   async postAlbumHandler(request, h) {
-    this._validator.validateAlbumPayload(request.payload);
+    this._albumTextValidator.validateAlbumPayload(request.payload);
 
     const { name, year, genre, performer } = request.payload;
 
@@ -28,6 +31,24 @@ class AlbumsHandler {
     return response;
   }
 
+  async postUploadAlbumCoverHandler(request, h) {
+    const { cover } = request.payload;
+    const albumId = request.params.id;
+
+    this._albumCoverValidator.validate(cover.hapi.headers);
+
+    const url = await this._storageService.uploadFile(cover, cover.hapi);
+
+    await this._service.updateAlbumCover(albumId, url);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Sampul album berhasil diunggah'
+    });
+    response.code(201);
+    return response;
+  }
+
   async getAlbumByIdHandler(request) {
     const { id } = request.params;
     const album = await this._service.getAlbumById(id);
@@ -39,7 +60,7 @@ class AlbumsHandler {
   }
 
   async putAlbumByIdHandler(request, h) {
-    this._validator.validateAlbumPayload(request.payload);
+    this._albumTextValidator.validateAlbumPayload(request.payload);
 
     const { id } = request.params;
     const { name, year, genre, performer } = request.payload;
