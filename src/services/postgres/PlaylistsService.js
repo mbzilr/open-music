@@ -6,10 +6,11 @@ const AuthenticationError = require('../../exceptions/AuthenticationError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistsService {
-  constructor(collaborationsService, playlistSongActivitiesService) {
+  constructor(collaborationsService, playlistSongActivitiesService, cacheService) {
     this._pool = new Pool();
     this._collaborationsService = collaborationsService;
     this._playlistSongActivitiesService = playlistSongActivitiesService;
+    this._cacheService = cacheService;
   }
 
   async addPlaylist({ name, owner }) {
@@ -33,6 +34,7 @@ class PlaylistsService {
       throw new InvariantError('Playlist Gagal ditambahkan');
     }
 
+    await this._cacheService.delete(`playlist:${result.rows[0].id}`);
     return result.rows[0].id;
   }
 
@@ -60,6 +62,8 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
+
+    await this._cacheService.delete(`playlist:${id}`);
 
     if (!result.rows.length) {
       throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
@@ -92,6 +96,7 @@ class PlaylistsService {
       'add'
     );
 
+    await this._cacheService.delete(`playlist:${playlistId}`);
     return result.rows[0].id;
   }
 
@@ -148,6 +153,8 @@ class PlaylistsService {
       userId,
       'delete'
     );
+
+    await this._cacheService.delete(`playlist:${playlistId}`);
   }
 
   async verifyPlaylistOwner(id, owner) {
@@ -184,6 +191,45 @@ class PlaylistsService {
         throw new AuthorizationError('Anda tidak berhak mengakses sumber daya ini');
       }
     }
+  }
+
+  async getCachedPlaylist(playlistId) {
+    try {
+      const cached = await this._cacheService.get(`playlist:${playlistId}`);
+      if (cached) return JSON.parse(cached);
+    } catch {
+      return null;
+    }
+  }
+
+  async setCachedPlaylist(playlistId, data) {
+    await this._cacheService.set(
+      `playlist:${playlistId}`,
+      JSON.stringify(data),
+    );
+  }
+
+  async deleteCachedPlaylist(playlistId) {
+    await this._cacheService.delete(`playlist:${playlistId}`);
+  }
+
+  async getPlaylist(playlistId) {
+    const cached = await this.getCachedPlaylist(playlistId);
+    if (cached) return cached;
+
+    const details = await this.getPlaylistDetails(playlistId);
+    const songs = await this.getSongsFromPlaylist(playlistId);
+
+    const data = {
+      id: details.id,
+      name: details.name,
+      username: details.username,
+      songs,
+    };
+
+    await this.setCachedPlaylist(playlistId, data);
+
+    return data;
   }
 }
 

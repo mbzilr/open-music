@@ -51,7 +51,6 @@ const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
 // Storage
-
 const S3StorageService = require('./services/S3/S3StorageService');
 
 // Cache
@@ -82,8 +81,8 @@ const init = async () => {
   const albumsLikesService = new AlbumsLikesService(albumsService, cacheService);
   const playlistSongActivitiesService = new PlaylistSongActivitiesService();
   const usersService = new UsersService();
-  const collaborationsService = new CollaborationsService();
-  const playlistsService = new PlaylistsService(collaborationsService, playlistSongActivitiesService);
+  const collaborationsService = new CollaborationsService(cacheService);
+  const playlistsService = new PlaylistsService(collaborationsService, playlistSongActivitiesService, cacheService);
   const exportsService = new ExportsService(playlistsService, collaborationsService);
   const producerService = new ProducerService();
   const authenticationsService = new AuthenticationsService();
