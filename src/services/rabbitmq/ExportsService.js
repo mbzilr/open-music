@@ -7,18 +7,7 @@ class ExportsService {
   }
 
   async verifyPlaylistAccess(playlistId, userId) {
-    try {
-      await this._playlistsService.verifyPlaylistOwner(playlistId, userId);
-    } catch (error) {
-      try {
-        await this._collaborationsService.verifyCollaborator(
-          playlistId,
-          userId
-        );
-      } catch {
-        throw error;
-      }
-    }
+    await this._playlistsService.verifyPlaylistOwner(playlistId, userId);
   }
 
   async getPlaylistSongs(playlistId) {
@@ -48,7 +37,11 @@ class ExportsService {
       from: 'OpenMusic API <noreply@likzili.dev>',
       to: targetEmail,
       subject: 'Ekspor Lagu Playlist',
-      text: `Terlampir hasil ekspor playlist:\n\n${JSON.stringify(data, null, 2)}`,
+      text: `Terlampir hasil ekspor playlist:\n\n${JSON.stringify(
+        data,
+        null,
+        2
+      )}`,
       attachments: [
         {
           filename: 'songs.json',
