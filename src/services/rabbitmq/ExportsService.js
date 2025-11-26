@@ -34,10 +34,6 @@ class ExportsService {
   }
 
   async sendEmail(targetEmail, data) {
-    console.log('=== DATA BEFORE SENDING ===');
-    console.log(data);
-    console.log('JSON LENGTH:', JSON.stringify(data).length);
-
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),

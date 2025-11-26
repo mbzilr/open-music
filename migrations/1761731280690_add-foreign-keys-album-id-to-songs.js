@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * @type {import('node-pg-migrate').ColumnDefinitions | undefined}
  */
@@ -10,14 +9,14 @@
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
-    pgm.addConstraint('songs', 'fk_songs_album_id', {
-        foreignKeys: {
-            columns: 'album_id',
-            references: 'albums(id)',
-            onDelete: 'SET NULL',
-            onUpdate: 'CASCADE',
-        }
-    });
+  pgm.addConstraint('songs', 'fk_songs_album_id', {
+    foreignKeys: {
+      columns: 'album_id',
+      references: 'albums(id)',
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
+    }
+  });
 };
 
 /**
@@ -26,5 +25,5 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
-    pgm.dropConstraint('songs', 'fk_songs_album_id');
+  pgm.dropConstraint('songs', 'fk_songs_album_id');
 };

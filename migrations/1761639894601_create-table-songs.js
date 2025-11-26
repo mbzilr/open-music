@@ -1,4 +1,3 @@
-
 /**
  * @type {import('node-pg-migrate').MigrationBuilder}
  */
