@@ -5,8 +5,9 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 const { mapDBtoAlbumModel } = require('../../utils/album');
 
 class AlbumsService {
-  constructor() {
+  constructor(songsService) {
     this._pool = new Pool();
+    this._songsService = songsService;
   }
 
   async addAlbum({ name, year, genre = null, performer = null }) {
@@ -43,15 +44,11 @@ class AlbumsService {
       throw new NotFoundError('Album tidak ditemukan');
     }
 
-    const songsQuery = {
-      text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
-      values: [id],
-    };
-    const songsResult = await this._pool.query(songsQuery);
+    const songs = await this._songsService.getSongsByAlbumId(id);
 
     return {
       ...mapDBtoAlbumModel(result.rows[0]),
-      songs: songsResult.rows,
+      songs
     };
   }
 

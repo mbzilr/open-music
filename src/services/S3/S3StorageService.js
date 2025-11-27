@@ -6,13 +6,13 @@ class S3StorageService {
     this._client = new S3Client({
       region: process.env.AWS_REGION,
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY,
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       },
     });
 
     this._bucket = config.s3.bucketName;
-    this._baseUrl = process.env.AWS_BUCKET_URL;
+    this._region = process.env.AWS_REGION;
   }
 
   async uploadFile(file, meta) {
@@ -29,7 +29,7 @@ class S3StorageService {
 
     await this._client.send(command);
 
-    return `${this._baseUrl}/${filename}`;
+    return `https://${this._bucket}.s3.${this._region}.amazonaws.com/${filename}`;
   }
 }
 

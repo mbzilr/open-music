@@ -74,7 +74,7 @@ const init = async () => {
   });
 
   const songsService = new SongsService();
-  const albumsService = new AlbumsService();
+  const albumsService = new AlbumsService(songsService);
   const cacheService = new CacheService();
   await cacheService.connect();
   const s3StorageService = new S3StorageService();

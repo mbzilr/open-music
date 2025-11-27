@@ -44,6 +44,24 @@ exports.up = (pgm) => {
       onUpdate: 'CASCADE',
     }
   });
+
+  pgm.addConstraint('playlist_song_activities', 'fk_song_id', {
+    foreignKeys: {
+      columns: 'song_id',
+      references: 'songs(id)',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    }
+  });
+
+  pgm.addConstraint('playlist_song_activities', 'fk_user_id', {
+    foreignKeys: {
+      columns: 'user_id',
+      references: 'users(id)',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    }
+  });
 };
 
 /**
@@ -53,5 +71,7 @@ exports.up = (pgm) => {
  */
 exports.down = (pgm) => {
   pgm.dropConstraint('playlist_song_activities', 'fk_playlist_id');
+  pgm.dropConstraint('playlist_song_activities', 'fk_song_id');
+  pgm.dropConstraint('playlist_song_activities', 'fk_user_id');
   pgm.dropTable('playlist_song_activities');
 };
